@@ -2,10 +2,14 @@
 import { z } from "zod";
 import UploadFormInput from "./upload-form-input";
 import { useUploadThing } from "@/utils/uploadthing";
-import { toast } from "sonner";
 import { generateReactHelpers } from "@uploadthing/react";
-import { generatePdfSummery } from "@/actions/upload-actions";
+import {
+  generatePdfSummery,
+  storePdfSummaryAction,
+} from "@/actions/upload-actions";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   file: z
@@ -22,7 +26,8 @@ const schema = z.object({
 
 export default function UploadForm() {
   const formRef = useRef<HTMLFormElement>(null);
-  const [isLoading,setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
   const { startUpload, routeConfig } = useUploadThing("pdfUploader", {
     onClientUploadComplete: () => {
       console.log("uploaded successfully!");
@@ -56,7 +61,7 @@ export default function UploadForm() {
             validatedFields.error.flatten().fieldErrors.file?.[0] ??
             "Invalid file",
         });
-        setIsLoading(false)
+        setIsLoading(false);
         return;
       }
 
@@ -78,28 +83,47 @@ export default function UploadForm() {
       const { data = null, message = null } = result || {};
 
       if (data) {
+        let storeResult: any;
         toast("Saving PDF", {
           description: "Hang tight, We are saving your summary!",
         });
 
         formRef.current?.reset();
-        if(data.summary){
-          
+        if (data.summary) {
+          storeResult = await storePdfSummaryAction({
+            fileName: file.name,
+            fileUrl: resp[0].serverData.file.url,
+            summary: data.summary,
+            title: data.title,
+          });
 
-          // save the summery to the database
+          console.log("store result", storeResult);
+
+          toast("Summery Generated!", {
+            description: "Your PDF has been successfully summarized and saved!",
+          });
+          formRef.current?.reset();
+
+          // redirrect logic
+          router.push(`/summeries/${storeResult.data.id}`);
         }
       }
       console.log("result", result);
     } catch (error) {
       console.error("Error occured", error);
       formRef.current?.reset();
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-2xl mx-auto">
-      <UploadFormInput onSubmit={handleSubmit} ref={formRef} isLoading ={isLoading} />
+      <UploadFormInput
+        onSubmit={handleSubmit}
+        ref={formRef}
+        isLoading={isLoading}
+      />
     </div>
   );
 }
