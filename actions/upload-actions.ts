@@ -80,7 +80,7 @@ export async function generatePdfSummery(uploadResponse: {
       message: "Summary generated successfully",
       data: {
         summary,
-        title:formattedFileName
+        title: formattedFileName,
       },
     };
   } catch (error) {
@@ -114,12 +114,22 @@ async function savePdfSummary({
       ${summary},
       ${title},
       ${fileName}
-  )
+  ) RETURNING 
+    id,
+    user_id,
+    original_file_url,
+    summary_text,
+    status,
+    title,
+    file_name,
+    created_at,
+    updated_at
      `;
 
-     console.log("Record ==>>",res)
+    // console.log("Record ==>>", res[0]);
+    return res[0];
   } catch (error) {
-    console.log("Error saving pdf summary",error);
+    console.log("Error saving pdf summary", error);
   }
 }
 
@@ -133,8 +143,7 @@ export async function storePdfSummaryAction({
 
   // save pdf summary
 
-  
-  let savedSummary:any;
+  let savedSummary: any;
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -150,27 +159,30 @@ export async function storePdfSummaryAction({
       title,
       fileName,
     });
+
+    console.log("savedSummary to send", savedSummary);
     if (!savedSummary) {
       return {
         success: false,
         message: "Failed to save PDF summary,please try again...",
       };
     }
-// revalidate cache
-    revalidatePath(`/summeries/${savedSummary.id}`)
+
+    // revalidate cache
+    revalidatePath(`/summeries/${savedSummary.id}`);
+
+    return {
+      success: true,
+      message: "PDF summary saved successfully",
+      data: {
+        id: savedSummary.id,
+      },
+    };
   } catch (error) {
     return {
       success: false,
       message:
         error instanceof Error ? error.message : "Error sacing PDF summary",
     };
-  }
-
-  return{
-    success:true,
-    message:"PDF summary saved successfully",
-    data:{
-      id:savedSummary.id
-    }
   }
 }

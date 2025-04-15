@@ -23,17 +23,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-    <html lang="en">
-      <body className={`${fontSans.variable} font-sans antialiased`}>
-        <div className="relative flex min-h-screen flex-col">
-          <Header  />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-        <Toaster />
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${fontSans.variable} font-sans antialiased`}
+        suppressHydrationWarning
+      >
+        <ClerkProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <Toaster />
+        </ClerkProvider>
       </body>
     </html>
-    </ClerkProvider>
   );
 }
