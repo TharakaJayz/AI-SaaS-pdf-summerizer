@@ -1,4 +1,4 @@
-
+import EmptySummaryState from "@/components/summaries/empty-summary-state";
 import SummaryCard from "@/components/summaries/summaryCard";
 import { Button } from "@/components/ui/button";
 import BgGradient from "@/components/ui/common/bg-gradient";
@@ -57,11 +57,15 @@ const page = async (props: Props) => {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:px-0">
-            {summaries.map((summary, index) => (
-              <SummaryCard summary={summary} key={index} />
-            ))}
-          </div>
+          {summaries.length === 0 ? (
+            <EmptySummaryState />
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:px-0">
+              {summaries.map((summary, index) => (
+                <SummaryCard summary={summary} key={index} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </main>
