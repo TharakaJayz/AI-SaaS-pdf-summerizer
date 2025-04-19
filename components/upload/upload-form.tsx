@@ -106,7 +106,7 @@ export default function UploadForm() {
 
           // redirrect logic
           console.log("this is data",data)
-          router.push(`/summeries/${storeResult.data.id}`);
+          router.push(`/summary/${storeResult.data.id}`);
         }
       }
       console.log("result", result);
