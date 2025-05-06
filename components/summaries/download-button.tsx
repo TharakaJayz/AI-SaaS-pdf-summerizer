@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from '../ui/button'
 
 type Props = {
     title:string,
@@ -9,7 +10,7 @@ type Props = {
 
 const DownloadSummaryButton = (props: Props) => {
   return (
-    <div>DownloadSummaryButton</div>
+    <Button size={"sm"} className='h-8 px-3 bg-rose-100 text-rose-600 hover:text-rose-700 hover:bg-rose-50'>DownloadSummaryButton</Button>
   )
 }
 

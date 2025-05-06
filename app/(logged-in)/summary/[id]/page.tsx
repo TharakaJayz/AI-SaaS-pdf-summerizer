@@ -30,7 +30,7 @@ const page = async (props: Props) => {
             <SummaryHeader
               title={title}
               created_at={created_at}
-              readingTime={readingTime}
+              readingTime={readingTime} 
             />
             {file_name && <SourceInfo file_name={file_name} />}
             <div className="relative mt-4 sm:mt-8 lg:mt-10">
