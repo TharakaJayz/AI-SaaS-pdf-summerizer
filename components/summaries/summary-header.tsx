@@ -53,8 +53,8 @@ const SummaryHeader = ({ title, created_at ,readingTime}: Props) => {
           >
             <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 text-rose-500 transition-transform group-hover:-translate-x-0.5" />
             <span className="text-xs sm:text-sm text-muted-foreground font-medium">
-              Back
-              <span className="hidden sm:inline">to Dashboard</span>
+             
+              <span className="hidden sm:inline"> Back to Dashboard</span>
             </span>{" "}
           </Button>
         </Link>
